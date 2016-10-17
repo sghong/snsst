@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#build env
+
 # KERNEL=kernel
 # KERNEL=kernel7
 # make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bcm2709_defconfig
