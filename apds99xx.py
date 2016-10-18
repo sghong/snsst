@@ -1,5 +1,5 @@
 import smbus
-import sys 
+import sys, getopt 
 
 bus=smbus.SMBus(1)
 
@@ -49,6 +49,10 @@ APDS99XX_IRDATAH_ADDR = 0x17
 APDS99XX_PDATAL_ADDR = 0x18
 APDS99XX_PDATAH_ADDR = 0x19
 
+if len(sys.argv) == 1 :
+  print "Usage : apds99xx.py [ L | P ] "
+  sys.exit()
+
 chipid = bus.read_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | v_CHIP_ID)
 
 print "---------"
@@ -66,14 +70,55 @@ bus.write_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | APDS99XX_CONTROL_ADDR, v
 
 #print "=%x=" % (v_APDS993X_PDRVIE_100MA | v_APDS993X_PRX_IR_DIOD | v_APDS993X_PGAIN | v_APDS993X_AGAIN)
 
-bus.write_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | APDS99XX_ENABLE_ADDR, 0x27 )
+def enable_proximity( ) :
+  bus.write_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | APDS99XX_ENABLE_ADDR, 0x25 )
 
-#sys.exit()
+  while 1 :
+    pdata = bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_PDATAL_ADDR)
+    pdata |= bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_PDATAH_ADDR) << 8
+    print "pdata is %d" % pdata
+  return;
 
-while 1 :
-  pdata = bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_PDATAL_ADDR)
-  pdata |= bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_PDATAH_ADDR) << 8
-  print "pdata is %d" % pdata
+# lux value be more calibrated
+def lux_calculation( ch0, ch1 ) :
+  v_lux = 0
+  als_B = 186 #223 
+  als_C = 75 #70
+  als_D = 129 #142
+  als_GA = 256
+  als_DF = 52
+
+  IAC1 = ( ch0 - ( als_B * ch1) / 100)
+  IAC2 = ( ( als_C * ch0 ) / 100  - ( als_D * ch1 ) / 100 )
+
+  if IAC1 > IAC2 :
+    IAC = IAC1
+  elif IAC1 <= IAC2 :
+    IAC = IAC2
+  else :
+    IAC = 0
+
+  #v_lux = ((IAC * als_GA * als_DF ) / 100) * 65 / 10 / ((2720 / 100) * 1)
+  v_lux = ((IAC * als_GA * als_DF ) / 100) / ((2720 / 100) * 1)
+
+  return v_lux
+
+def enable_light( ) :
+  bus.write_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | APDS99XX_ENABLE_ADDR, 0x23 )
+
+  while 1 :
+    ch0data = bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_CDATAL_ADDR)
+    ch1data = bus.read_word_data(DEVICE_ADDRESS, APDS99XX_CMD_WORD | APDS99XX_CDATAH_ADDR)
+    #print "0x%X, 0x%X" % ( ch0data, ch1data )
+    print "lux is %d" % lux_calculation( ch0data, ch1data )
+  return;
+
+if sys.argv[1] == "P" :
+  enable_proximity( )
+elif sys.argv[1] == "L" :
+  enable_light( )
+
+sys.exit()
 
 
 
