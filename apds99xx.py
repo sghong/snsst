@@ -8,7 +8,8 @@ DEVICE_ADDRESS = 0x39
 APDS99XX_CMD_BYTE = 0x80
 APDS99XX_CMD_WORD = 0xA0
 
-v_CHIP_ID = 0x12 
+APDS9930_CHIP_ID = 0x12 
+
 v_ATIME = 0xff # 2.7ms minimum ALS integration time
 v_PTIME = 0xff # 2.7ms minimum Wait time 
 v_WTIME = 0xff # 2.7 ms minimum Prox integration time 
@@ -53,7 +54,7 @@ if len(sys.argv) == 1 :
   print "Usage : apds99xx.py [ L | P ] "
   sys.exit()
 
-chipid = bus.read_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | v_CHIP_ID)
+chipid = bus.read_byte_data(DEVICE_ADDRESS, APDS99XX_CMD_BYTE | APDS9930_CHIP_ID)
 
 print "---------"
 if chipid == 0x39 :
