@@ -1,9 +1,9 @@
-센서 스틱
+This is a sensor stick
 
-## 지원 센서
+## Supported sensor
 APDS9930
 BMI160
 BMM151
 
-## 참고사항
-“[로켓에 자리가 나면 일단 올라타라](http://estima.wordpress.com/2012/05/28/sheryl/)" - 에릭 슈미트
+## Referrenced
+  http://poetsandquants.com/2012/05/24/sheryl-sandbergs-class-day-speech-at-harvard-business-school/
