@@ -2,8 +2,8 @@ This is a sensor stick. It's 9 axis
 
 ## Supported sensor
 APDS9930, ambient light and proximity sensor <br>
-BMI160 accelrometer and gyroscope sensor<br>
-BMM151 magnetic field sensor<br>
+BMI160 accelerometer and gyroscope sensor<br>
+BMM151 geomagnetic sensor<br>
 
 ## Usage
 -sudo python apds99xx.py L or P <br>
