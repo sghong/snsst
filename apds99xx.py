@@ -1,11 +1,16 @@
 ##
 ##
 
-
+##
+##
 
 import smbus
 import sys, getopt 
 
+#
+# bus conflict
+#
+ 
 bus=smbus.SMBus(1)
 
 DEVICE_ADDRESS = 0x39
