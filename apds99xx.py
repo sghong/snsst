@@ -4,6 +4,8 @@
 ##
 ##
 
+## conflict test
+
 import smbus
 import sys, getopt 
 
