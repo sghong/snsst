@@ -12,6 +12,10 @@ import sys, getopt
 #
 # bus conflict
 #
+
+#
+# subversion conflict
+#
  
 bus=smbus.SMBus(1)
 
